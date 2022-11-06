@@ -23,7 +23,23 @@ public class SecondActivity extends AppCompatActivity {
         Intent intent = new Intent();
         User user = (User) getIntent().getSerializableExtra("objUser");
 
-        TextView textFull = (TextView) findViewById(R.id.textFullName);
-        textFull.setText("Full name: " + user.getFullname());
+        TextView textFullname = (TextView) findViewById(R.id.textFullName);
+        textFullname.setText("Full name: " + user.getFullname());
+
+        TextView textPassword = (TextView) findViewById(R.id.textPassword);
+        textPassword.setText("Password: " + user.getPwd());
+
+        TextView textEmail = (TextView) findViewById(R.id.textEmail);
+        textEmail.setText("Email: " + user.getEmail());
+
+        TextView textBirthdate = (TextView) findViewById(R.id.textBirthdate);
+        textBirthdate.setText("Birthdate: " + user.getBirthdate());
+
+        TextView textAddress = (TextView) findViewById(R.id.textAddress);
+        textAddress.setText("Address: " + user.getAddress());
+
+        TextView textGender = (TextView) findViewById(R.id.textGender);
+        textGender.setText("Gender: " + user.getGender());
+
     }
 }

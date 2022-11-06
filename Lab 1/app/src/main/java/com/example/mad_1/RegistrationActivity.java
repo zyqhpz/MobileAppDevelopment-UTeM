@@ -32,12 +32,12 @@ public class RegistrationActivity extends AppCompatActivity {
             }
         });
 
-//        binding.edtBirthdate.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                fnInvokeDatePicker();
-//            }
-//        });
+        binding.edtBirthdate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                fnInvokeDatePicker();
+            }
+        });
 
         binding.fabAddUser.setOnClickListener(this::fnAddUser);
     }
