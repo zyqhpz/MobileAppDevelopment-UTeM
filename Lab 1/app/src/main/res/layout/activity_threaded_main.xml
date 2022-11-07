@@ -4,30 +4,24 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:onClick="fnTakePic"
     android:orientation="vertical"
-    tools:context=".ThreadedActivity">
+    tools:context=".ThreadedActivityMain">
 
     <TextView
-        android:id="@+id/tvGreet"
-        android:layout_width="wrap_content"
+        android:id="@+id/textView2"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="TextView" />
+        android:text="Here is your preview picture" />
 
     <ImageView
-        android:id="@+id/imgVwProfile"
+        android:id="@+id/imageView"
         android:layout_width="match_parent"
-        android:layout_height="428dp" />
+        android:layout_height="364dp"
+        tools:srcCompat="@tools:sample/avatars" />
 
     <Button
-        android:id="@+id/btnTakePic"
+        android:id="@+id/btnTakePicturePage"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Take Pictures!" />
-
-    <Button
-        android:id="@+id/btnBack"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Back to previous page" />
+        android:text="Click to snap a picture" />
 </LinearLayout>
