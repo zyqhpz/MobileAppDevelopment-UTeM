@@ -48,24 +48,14 @@ public class RegistrationActivity extends AppCompatActivity {
 
         binding.fabAddUser.setOnClickListener(this::fnAddUser);
 
-//        binding.edtFullName.addTextChangedListener(textWatcher);
-//        binding.edtPwd.addTextChangedListener(textWatcher);
-//        binding.edtBirthdate.addTextChangedListener(textWatcher);
-//        binding.edtEmail.addTextChangedListener(textWatcher);
-//        binding.edtAddress.addTextChangedListener(textWatcher);
-//        binding.rbMale.addTextChangedListener(textWatcher);
-//        binding.rbFemale.addTextChangedListener(textWatcher);
-
         binding.rbMale.setChecked(true);
 
         ArrayList<EditText> inputs = new ArrayList<EditText>(Arrays.asList(binding.edtFullName, binding.edtPwd,
                 binding.edtBirthdate, binding.edtEmail, binding.edtAddress));
 
-
         for (EditText input : inputs) {
             input.addTextChangedListener(textWatcher);
         }
-
     }
 
     private TextWatcher textWatcher = new TextWatcher() {
