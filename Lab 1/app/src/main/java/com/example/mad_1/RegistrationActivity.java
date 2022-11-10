@@ -5,11 +5,16 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.DatePicker;
+import android.widget.EditText;
 
 import com.example.mad_1.databinding.ActivityRegistrationBinding;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 
 public class RegistrationActivity extends AppCompatActivity {
@@ -24,6 +29,8 @@ public class RegistrationActivity extends AppCompatActivity {
 
         binding = ActivityRegistrationBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
+        binding.fabAddUser.setEnabled(false);
 
         binding.edtBirthdate.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
@@ -40,7 +47,52 @@ public class RegistrationActivity extends AppCompatActivity {
         });
 
         binding.fabAddUser.setOnClickListener(this::fnAddUser);
+
+//        binding.edtFullName.addTextChangedListener(textWatcher);
+//        binding.edtPwd.addTextChangedListener(textWatcher);
+//        binding.edtBirthdate.addTextChangedListener(textWatcher);
+//        binding.edtEmail.addTextChangedListener(textWatcher);
+//        binding.edtAddress.addTextChangedListener(textWatcher);
+//        binding.rbMale.addTextChangedListener(textWatcher);
+//        binding.rbFemale.addTextChangedListener(textWatcher);
+
+        binding.rbMale.setChecked(true);
+
+        ArrayList<EditText> inputs = new ArrayList<EditText>(Arrays.asList(binding.edtFullName, binding.edtPwd,
+                binding.edtBirthdate, binding.edtEmail, binding.edtAddress));
+
+
+        for (EditText input : inputs) {
+            input.addTextChangedListener(textWatcher);
+        }
+
     }
+
+    private TextWatcher textWatcher = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+            CharSequence cs1 = binding.edtFullName.getText().toString().trim();
+            CharSequence cs2 = binding.edtPwd.getText().toString().trim();
+            CharSequence cs3 = binding.edtBirthdate.getText().toString().trim();
+            CharSequence cs4 = binding.edtEmail.getText().toString().trim();
+            CharSequence cs5 = binding.edtAddress.getText().toString().trim();
+
+            if (cs1.length() > 0 && cs2.length() > 0 && cs3.length() > 0 && cs4.length() > 0 && cs5.length() > 0 && (binding.rbFemale.isChecked() || binding.rbMale.isChecked()))
+                binding.fabAddUser.setEnabled(true);
+            else
+                binding.fabAddUser.setEnabled(false);
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+
+        }
+    };
 
     private void fnInvokeDatePicker() {
         final Calendar cldr = Calendar.getInstance();
