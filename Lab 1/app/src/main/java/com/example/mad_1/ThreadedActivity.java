@@ -67,9 +67,11 @@ public class ThreadedActivity extends AppCompatActivity {
         Intent intent = new Intent(this, ThreadedActivityMain.class);
         byteArray = bStream.toByteArray();
 //        intent.putExtra("pic", byteArray);
-        intent.putExtra("text", "from camera");
-        setResult(RESULT_OK, intent);
-        finish();
+        intent.putExtra("byteArray", byteArray);
+        intent.putExtra("text", "from camera page!!");
+//        setResult(RESULT_OK, intent);
+        startActivity(intent);
+//        finish();
     }
 
     public void fnTakePic(View view)
@@ -94,57 +96,57 @@ public class ThreadedActivity extends AppCompatActivity {
 //    public void onBackPressed() {
 //
 //    }
-
-    @Override
-    public void onBackPressed() {
-//        Bundle bundle = new Bundle();
-//        bundle.putString(FIELD_A, mA.getText().toString());
-
 //
-        try {
-            Intent intent = new Intent();
-////            Intent intent = new Intent(this, ThreadedActivityMain.class);
-////            intent.putExtra("pic", (CharSequence) imgVwPic);
-////                    intent.putExtra("pic", R.id.imgVwProfile);
+//    @Override
+//    public void onBackPressed() {
+////        Bundle bundle = new Bundle();
+////        bundle.putString(FIELD_A, mA.getText().toString());
 //
-//
-//            imgVwPic = findViewById(R.id.imgVwProfile);
-//            imgVwPic.buildDrawingCache();
-//            Bitmap bp = imgVwPic.getDrawingCache();
-//
-//            Bundle extras = new Bundle();
-//            extras.putParcelable("pic", image);
-//            intent.putExtras(extras);
-////            startActivity(intent);
-            byteArray = bStream.toByteArray();
-
-//            ByteArrayOutputStream bStream = new ByteArrayOutputStream();
-            //bp.compress(Bitmap.CompressFormat.PNG, 100, bStream);
+////
+//        try {
+//            Intent intent = new Intent();
+//////            Intent intent = new Intent(this, ThreadedActivityMain.class);
+//////            intent.putExtra("pic", (CharSequence) imgVwPic);
+//////                    intent.putExtra("pic", R.id.imgVwProfile);
+////
+////
+////            imgVwPic = findViewById(R.id.imgVwProfile);
+////            imgVwPic.buildDrawingCache();
+////            Bitmap bp = imgVwPic.getDrawingCache();
+////
+////            Bundle extras = new Bundle();
+////            extras.putParcelable("pic", image);
+////            intent.putExtras(extras);
+//////            startActivity(intent);
 //            byteArray = bStream.toByteArray();
-
-//            Intent anotherIntent = new Intent(this, anotherActivity.class);
-//            intent.putExtra("pic", byteArray);
-
-//            intent.putExtra("byteArray", byteArray);
-            intent.putExtra("text", "From camera activity");
-//            startActivity(anotherIntent);
-//            finish();
-
-            setResult(RESULT_OK, intent);
-            finish();
-//            super.onBackPressed();
-        } catch (Exception e) {
-            setResult(RESULT_CANCELED);
-            finish();
-        }
 //
-////        Intent intent = new Intent();
-////        intent.putExtra("pic", (CharSequence) imgVwPic);
-////        intent.putExtra("pic", R.id.imgVwProfile);
-////        intent.putExtras(bundle);
-////        setResult(RESULT_OK, intent);
-        super.onBackPressed();
-    }
+////            ByteArrayOutputStream bStream = new ByteArrayOutputStream();
+//            //bp.compress(Bitmap.CompressFormat.PNG, 100, bStream);
+////            byteArray = bStream.toByteArray();
+//
+////            Intent anotherIntent = new Intent(this, anotherActivity.class);
+////            intent.putExtra("pic", byteArray);
+//
+////            intent.putExtra("byteArray", byteArray);
+//            intent.putExtra("text", "From camera activity");
+////            startActivity(anotherIntent);
+////            finish();
+//
+//            setResult(RESULT_OK, intent);
+//            finish();
+////            super.onBackPressed();
+//        } catch (Exception e) {
+//            setResult(RESULT_CANCELED);
+//            finish();
+//        }
+////
+//////        Intent intent = new Intent();
+//////        intent.putExtra("pic", (CharSequence) imgVwPic);
+//////        intent.putExtra("pic", R.id.imgVwProfile);
+//////        intent.putExtras(bundle);
+//////        setResult(RESULT_OK, intent);
+//        super.onBackPressed();
+//    }
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);

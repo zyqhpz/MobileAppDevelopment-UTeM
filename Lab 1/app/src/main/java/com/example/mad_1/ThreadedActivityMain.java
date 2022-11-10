@@ -60,7 +60,7 @@ public class ThreadedActivityMain extends AppCompatActivity {
 
         super.onRestart();
 
-        Intent intent = new Intent();
+//        Intent intent = new Intent();
 //        Bitmap bitmap = (Bitmap) intent.getParcelableExtra("pic");
 
         tv.setText("Here is your image! " + getIntent().getStringExtra("text"));
@@ -76,41 +76,10 @@ public class ThreadedActivityMain extends AppCompatActivity {
 
 //            tv.setText("Here is your image! " + getIntent().getStringExtra("text"));
         }
+        else {
+            tv.setText("Failed " + getIntent().getStringExtra("text"));
+        }
     }
-
-//    @Override
-//    protected void onRestart() {
-//        super.onRestart();
-//        tv = findViewById(R.id.textView2);
-//        tv.setText("Failed to fetch picture");
-//
-//        imageView = findViewById(R.id.imageView);
-//
-////        Bundle bundle = getIntent().getExtras();
-////        if (bundle != null) {
-////            int res_image = bundle.getInt("pic");
-////            imageView = findViewById(R.id.imageView);
-////            imageView.setImageResource(res_image);
-//        }
-
-//        try {
-////            Intent intent = getIntent();
-////            Bitmap bitmap = (Bitmap) intent.getParcelableExtra("pic");
-////            imageView.setImageBitmap(bitmap);
-//            tv.setText("Here is your picture!!");
-//        } catch (Exception e) {
-////            TextView tv = findViewById(R.id.textView2);
-//            tv.setText("Failed to fetch picture");
-//        }
-//    }
-
-
-//    @Override
-//    protected void onDestroy() {
-//        super.onDestroy();
-//        TextView tv = findViewById(R.id.textView2);
-//        tv.setText("Failed to fetch picture");
-//    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -121,49 +90,15 @@ public class ThreadedActivityMain extends AppCompatActivity {
         btnTakePicturePage.setOnClickListener(this::fnNextActivity);
 
         imageView = findViewById(R.id.imageView);
+        tv = findViewById(R.id.textView2);
 
-//        Intent intent = new Intent();
-
-//        try {
-//            Intent intent = getIntent();
-//            Bitmap bitmap = (Bitmap) intent.getParcelableExtra("pic");
-//            imageView.setImageBitmap(bitmap);
-//        } catch (Exception e) {
-//            TextView tv = findViewById(R.id.textView2);
-//            tv.setText("Failed to fetch picture");
-//        }
-//
-//        Bundle bundle = getIntent().getExtras();
-//        if (bundle != null) {
-//            int res_image = bundle.getInt("pic");
-//            imageView.setImageResource(res_image);
-//        }
-
-//        try {
-//            tv.setText("Here is your picture!!");
-//        } catch (Exception e) {
-//            tv.setText("Failed to fetch picture");
-//        }
-
-
-
-
-
-//        Bitmap bitmap = (Bitmap) intent.getParcelableExtra("pic");
-
+        if (getIntent().getExtras() != null) {
+            onRestart();
+//            tv.setText("Extras exist");
+        }
 
     }
 
-//    public void onBackPressed() {
-//        try {
-//            Intent intent = getIntent();
-//            Bitmap bitmap = intent.getParcelableExtra("pic");
-//            imageView.setImageBitmap(bitmap);
-//        } catch (Exception e) {
-//            TextView tv = findViewById(R.id.textView2);
-//            tv.setText("Failed to fetch picture");
-//        }
-//    }
 
     private void fnNextActivity(View view) {
 //        Intent intent = Intent(this, SecondActivity.class);
