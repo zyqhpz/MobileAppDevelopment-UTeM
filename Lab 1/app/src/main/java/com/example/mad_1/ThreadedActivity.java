@@ -24,6 +24,9 @@ public class ThreadedActivity extends AppCompatActivity {
     Button btnTakePic;
     Button btnBack;
 
+    public static final String TEXT_VALUE = "NAME";
+    public static final String IMAGE_SOURCE = "IMAGE";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -67,6 +70,7 @@ public class ThreadedActivity extends AppCompatActivity {
         Intent intent = new Intent(this, ThreadedActivityMain.class);
         byteArray = bStream.toByteArray();
 //        intent.putExtra("pic", byteArray);
+//        intent.putExtra("byteArray", byteArray);
         intent.putExtra("byteArray", byteArray);
         intent.putExtra("text", "from camera page!!");
 //        setResult(RESULT_OK, intent);
@@ -91,6 +95,20 @@ public class ThreadedActivity extends AppCompatActivity {
 
         Thread thr = new Thread(run);
         thr.start();
+    }
+
+    public void onBackPressed() {
+//        Intent intent = new Intent(this, ThreadedActivityMain.class);
+//        intent.putExtra("pic", byteArray);
+        Intent intent = new Intent();
+        byteArray = bStream.toByteArray();
+
+        intent.putExtra(IMAGE_SOURCE, byteArray);
+//        intent.putExtra("text", "from camera page!!");
+        intent.putExtra(TEXT_VALUE, "from camera page!!");
+       setResult(RESULT_OK, intent);
+        // startActivity(intent);
+       finish(); 
     }
 
 //    public void onBackPressed() {

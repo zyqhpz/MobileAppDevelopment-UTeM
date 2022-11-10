@@ -1,7 +1,15 @@
 package com.example.mad_1;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContract;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -55,6 +63,33 @@ public class ThreadedActivityMain extends AppCompatActivity {
 //        }
 //    }
 
+    ActivityResultLauncher<Intent> startForResult = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
+        @Override
+        public void onActivityResult(ActivityResult result) {
+            if (result != null && result.getResultCode() == RESULT_OK) {
+                if (result.getData() != null && result.getData().getStringExtra(ThreadedActivity.TEXT_VALUE) != null) {
+                    tv.setText("get from new launcher");
+                    tv.setText("get from new launcher " + result.getData().getStringExtra(ThreadedActivity.TEXT_VALUE));
+
+                    if (result.getData().getByteArrayExtra(ThreadedActivity.IMAGE_SOURCE) != null) {
+                        bp = BitmapFactory.decodeByteArray(result.getData().getByteArrayExtra(ThreadedActivity.IMAGE_SOURCE), 0, result.getData().getByteArrayExtra(ThreadedActivity.IMAGE_SOURCE).length);
+                        imageView = findViewById(R.id.imageView);
+                        imageView.setImageBitmap(bp);
+                        tv.setText("get from new launcher " + result.getData().getStringExtra(ThreadedActivity.TEXT_VALUE) + " success");
+                    } else {
+                        tv.setText("get from new launcher " + result.getData().getStringExtra(ThreadedActivity.TEXT_VALUE) + " failed");
+
+                    }
+
+////                    if(getIntent().hasExtra("byteArray")) {
+//                        bp = BitmapFactory.decodeByteArray(result.getData().getByteArrayExtra(ThreadedActivity.IMAGE_SOURCE), 0, result.getData().getByteArrayExtra(ThreadedActivity.IMAGE_SOURCE).length);
+//                        imageView.setImageBitmap(bp);
+
+                }
+            }
+        }
+    });
+
     @Override
     protected void onRestart() {
 
@@ -66,10 +101,6 @@ public class ThreadedActivityMain extends AppCompatActivity {
         tv.setText("Here is your image! " + getIntent().getStringExtra("text"));
 
         if(getIntent().hasExtra("byteArray")) {
-//            ImageView previewThumbnail = new ImageView(this);
-//            Bitmap b = BitmapFactory.decodeByteArray(
-//                    getIntent().getByteArrayExtra("byteArray"),0,getIntent().getByteArrayExtra("byteArray").length);
-//            previewThumbnail.setImageBitmap(b);
 
             bp = BitmapFactory.decodeByteArray(getIntent().getByteArrayExtra("byteArray"), 0, getIntent().getByteArrayExtra("byteArray").length);
             imageView.setImageBitmap(bp);
@@ -102,29 +133,9 @@ public class ThreadedActivityMain extends AppCompatActivity {
 
     private void fnNextActivity(View view) {
 //        Intent intent = Intent(this, SecondActivity.class);
-        startActivity(new Intent(this, ThreadedActivity.class));
-//        startActivityForResult(new Intent(this, ThreadedActivity.class), 2);
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data){
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 2) {
-            if(resultCode == RESULT_OK) {
-//                String strEditText = data.getStringExtra("editTextValue");
-//                byte[] byteArray = getIntent().getByteArrayExtra("byteArray");
-//                bp = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
-//                imageView.setImageBitmap(bp);
-
-//                data.getStringExtra("text");
-
-//                tv.setText("Here is your image! " + getIntent().getStringExtra("text"));
-                tv.setText("Here is your image! " + data.getStringExtra("text"));
-            }
-            else {
-                tv.setText("Failed from activity 2");
-            }
-        }
+        // startActivity(new Intent(this, ThreadedActivity.class));
+//       startActivityForResult(new Intent(this, ThreadedActivity.class), 2);
+       startForResult.launch(new Intent(this, ThreadedActivity.class));
     }
 
 //    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
