@@ -11,9 +11,15 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.io.ByteArrayOutputStream;
+
 public class ThreadedActivity extends AppCompatActivity {
 
     ImageView imgVwPic;
+    Bitmap bp;
+    ByteArrayOutputStream bStream;
+    byte[] byteArray;
+
     TextView tvGreet;
     Button btnTakePic;
     Button btnBack;
@@ -41,42 +47,44 @@ public class ThreadedActivity extends AppCompatActivity {
 //        Intent intent = new Intent(this, ThreadedActivityMain.class);
 //        intent.putExtra("pic", (CharSequence) imgVwPic);
 
-        Intent intent = new Intent();
-//            intent.putExtra("pic", (CharSequence) imgVwPic);
-//                    intent.putExtra("pic", R.id.imgVwProfile);
+//        Intent intent = new Intent();
+////            intent.putExtra("pic", (CharSequence) imgVwPic);
+////                    intent.putExtra("pic", R.id.imgVwProfile);
+//
+//
+//        imgVwPic.buildDrawingCache();
+//        Bitmap image= imgVwPic.getDrawingCache();
+//
+//        Bundle extras = new Bundle();
+//        extras.putParcelable("pic", image);
+//        intent.putExtras(extras);
+////            startActivity(intent);
+//
+//        setResult(RESULT_OK, intent);
+//
+//        finish();
 
-
-        imgVwPic.buildDrawingCache();
-        Bitmap image= imgVwPic.getDrawingCache();
-
-        Bundle extras = new Bundle();
-        extras.putParcelable("pic", image);
-        intent.putExtras(extras);
-//            startActivity(intent);
-
+        Intent intent = new Intent(this, ThreadedActivityMain.class);
+        byteArray = bStream.toByteArray();
+//        intent.putExtra("pic", byteArray);
+        intent.putExtra("text", "from camera");
         setResult(RESULT_OK, intent);
-
         finish();
-
-//        startActivity(intent);
     }
 
     public void fnTakePic(View view)
     {
-        Runnable run = new Runnable() {
-            @Override
-            public void run() {
-                Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                startActivityForResult(intent, 0);
+        Runnable run = () -> {
+            Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            startActivityForResult(intent, 0);
 
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        tvGreet.setText("Opening camera");
-                    }
-                });
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    tvGreet.setText("Opening camera");
+                }
+            });
 
-            }
         };
 
         Thread thr = new Thread(run);
@@ -87,38 +95,54 @@ public class ThreadedActivity extends AppCompatActivity {
 //
 //    }
 
+    @Override
     public void onBackPressed() {
 //        Bundle bundle = new Bundle();
 //        bundle.putString(FIELD_A, mA.getText().toString());
 
-
+//
         try {
             Intent intent = new Intent();
-//            Intent intent = new Intent(this, ThreadedActivityMain.class);
-//            intent.putExtra("pic", (CharSequence) imgVwPic);
-//                    intent.putExtra("pic", R.id.imgVwProfile);
+////            Intent intent = new Intent(this, ThreadedActivityMain.class);
+////            intent.putExtra("pic", (CharSequence) imgVwPic);
+////                    intent.putExtra("pic", R.id.imgVwProfile);
+//
+//
+//            imgVwPic = findViewById(R.id.imgVwProfile);
+//            imgVwPic.buildDrawingCache();
+//            Bitmap bp = imgVwPic.getDrawingCache();
+//
+//            Bundle extras = new Bundle();
+//            extras.putParcelable("pic", image);
+//            intent.putExtras(extras);
+////            startActivity(intent);
+            byteArray = bStream.toByteArray();
 
+//            ByteArrayOutputStream bStream = new ByteArrayOutputStream();
+            //bp.compress(Bitmap.CompressFormat.PNG, 100, bStream);
+//            byteArray = bStream.toByteArray();
 
-            imgVwPic = findViewById(R.id.imgVwProfile);
-            imgVwPic.buildDrawingCache();
-            Bitmap image= imgVwPic.getDrawingCache();
+//            Intent anotherIntent = new Intent(this, anotherActivity.class);
+//            intent.putExtra("pic", byteArray);
 
-            Bundle extras = new Bundle();
-            extras.putParcelable("pic", image);
-            intent.putExtras(extras);
-//            startActivity(intent);
+//            intent.putExtra("byteArray", byteArray);
+            intent.putExtra("text", "From camera activity");
+//            startActivity(anotherIntent);
+//            finish();
 
             setResult(RESULT_OK, intent);
-            super.onBackPressed();
+            finish();
+//            super.onBackPressed();
         } catch (Exception e) {
             setResult(RESULT_CANCELED);
+            finish();
         }
-
-//        Intent intent = new Intent();
-//        intent.putExtra("pic", (CharSequence) imgVwPic);
-//        intent.putExtra("pic", R.id.imgVwProfile);
-//        intent.putExtras(bundle);
-//        setResult(RESULT_OK, intent);
+//
+////        Intent intent = new Intent();
+////        intent.putExtra("pic", (CharSequence) imgVwPic);
+////        intent.putExtra("pic", R.id.imgVwProfile);
+////        intent.putExtras(bundle);
+////        setResult(RESULT_OK, intent);
         super.onBackPressed();
     }
 
@@ -127,7 +151,13 @@ public class ThreadedActivity extends AppCompatActivity {
 
         tvGreet.setText("image snapped");
 
-        Bitmap bp = (Bitmap) data.getExtras().get("data");
+        bp = (Bitmap) data.getExtras().get("data");
+
+        bStream = new ByteArrayOutputStream();
+        bp.compress(Bitmap.CompressFormat.PNG, 100, bStream);
+
+//        byteArray = bStream.toByteArray();
+
         imgVwPic.setImageBitmap(bp);
     }
 }
