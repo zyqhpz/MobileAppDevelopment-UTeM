@@ -67,4 +67,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Lab 4" />
+
+    <Button
+        android:id="@+id/btnLab5"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Lab 5" />
 </LinearLayout>

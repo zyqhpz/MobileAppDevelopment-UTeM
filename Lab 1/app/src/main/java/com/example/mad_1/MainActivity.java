@@ -39,6 +39,9 @@ public class MainActivity extends AppCompatActivity {
 
         Button btnLab4 = (Button) findViewById(R.id.btnLab4);
         btnLab4.setOnClickListener(this::changeActivityFour);
+
+        Button btnLab5 = (Button) findViewById(R.id.btnLab5);
+        btnLab5.setOnClickListener(this::changeActivityFive);
     }
 
     public void fnChangeText(View view) {
@@ -53,6 +56,11 @@ public class MainActivity extends AppCompatActivity {
 
     public void changeActivityFour(View view) {
         Intent intent = new Intent(this, RegistrationActivity.class);
+        startActivity(intent);
+    }
+
+    public void changeActivityFive(View view) {
+        Intent intent = new Intent(this, StudentMainActivity.class);
         startActivity(intent);
     }
 }
