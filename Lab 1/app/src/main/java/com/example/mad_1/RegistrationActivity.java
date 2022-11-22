@@ -32,19 +32,25 @@ public class RegistrationActivity extends AppCompatActivity {
 
         binding.fabAddUser.setEnabled(false);
 
-        binding.edtBirthdate.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View view, boolean b) {
-                fnInvokeDatePicker();
-            }
-        });
 
-        binding.edtBirthdate.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                fnInvokeDatePicker();
-            }
-        });
+
+        if (binding.edtBirthdate.getText().toString().trim().length() >= 0) {
+            binding.edtBirthdate.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+                @Override
+                public void onFocusChange(View view, boolean b) {
+                    fnInvokeDatePicker();
+                }
+            });
+        } else {
+            binding.edtBirthdate.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    fnInvokeDatePicker();
+                }
+            });
+        }
+
+
 
         binding.fabAddUser.setOnClickListener(this::fnAddUser);
 

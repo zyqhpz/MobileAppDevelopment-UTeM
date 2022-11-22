@@ -74,6 +74,13 @@
             android:layout_height="wrap_content"
             android:text="Female" />
     </RadioGroup>
+
+    <Spinner
+        android:id="@+id/spnState"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:entries="@array/state_arrays"/>
+
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fabAddUser"
         android:layout_width="match_parent"

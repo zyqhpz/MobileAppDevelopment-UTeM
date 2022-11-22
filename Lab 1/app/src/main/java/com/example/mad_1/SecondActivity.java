@@ -20,7 +20,7 @@ public class SecondActivity extends AppCompatActivity {
 //        setContentView(binding.getRoot());
 
         setContentView(R.layout.activity_second);
-        Intent intent = new Intent();
+//        Intent intent = new Intent();
         User user = (User) getIntent().getSerializableExtra("objUser");
 
         TextView textFullname = (TextView) findViewById(R.id.textFullName);
