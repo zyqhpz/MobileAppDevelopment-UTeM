@@ -1,15 +1,21 @@
 package com.example.mad_1;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.DatePickerDialog;
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.DatePicker;
 
 import com.example.mad_1.databinding.ActivityNavigationBinding;
+import com.google.android.material.navigation.NavigationView;
 
 import java.util.Calendar;
 import java.util.Vector;
@@ -20,19 +26,34 @@ public class NavigationMainActivity extends AppCompatActivity {
     private Student student;
 
     private Vector<Student> students;
-    //    private StudentAdapter studentAdapter;
     private RecyclerView.Adapter adapter;
 
     private DatePickerDialog datePicker;
 
+    private DrawerLayout drawerLayout;
+    private ActionBarDrawerToggle actionBarDrawerToggle;
+    private NavigationView navigationView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_student_main);
 
         binding = ActivityNavigationBinding.inflate(getLayoutInflater());
 
         setContentView(binding.getRoot());
+
+        // bind drawerLayout with my_drawer_layout using binding
+        drawerLayout = (DrawerLayout) binding.myDrawerLayout;
+//        drawerLayout = (DrawerLayout) findViewById(R.id.my_drawer_layout);
+
+        actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.nav_open, R.string.nav_close);
+        actionBarDrawerToggle.syncState();
+
+        drawerLayout.addDrawerListener(actionBarDrawerToggle);
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+//        navigationView = (NavigationView) findViewById(R.id.nav_menu);
+        navigationView = (NavigationView) binding.navMenu;
 
         binding.fabAdd.setOnClickListener(this::fnAdd);
 
@@ -66,6 +87,30 @@ public class NavigationMainActivity extends AppCompatActivity {
 
         binding.rcvStud.setAdapter(adapter);
         binding.rcvStud.setLayoutManager(new LinearLayoutManager(this));
+
+        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                Intent intent;
+
+                switch (item.getItemId()) {
+                    case R.id.nav_main_activity:
+                        return true;
+
+                    case R.id.nav_camera_activity:
+                        return false;
+                }
+                return false;
+            }
+        });
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (actionBarDrawerToggle.onOptionsItemSelected(item)) {
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     private void fnAdd(View view)  {

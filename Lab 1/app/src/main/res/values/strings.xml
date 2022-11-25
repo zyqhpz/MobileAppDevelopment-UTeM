@@ -12,4 +12,7 @@
         <item>Kedah</item>
         <item>Perlis</item>
     </string-array>
+
+    <string name="nav_open">Open drawer</string>
+    <string name="nav_close">Close drawer</string>
 </resources>
