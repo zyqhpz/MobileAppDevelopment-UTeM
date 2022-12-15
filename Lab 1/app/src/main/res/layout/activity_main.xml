@@ -80,4 +80,10 @@
         android:layout_height="wrap_content"
         android:text="Lab 6" />
 
+    <Button
+        android:id="@+id/btnLab7"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Lab 7" />
+
 </LinearLayout>

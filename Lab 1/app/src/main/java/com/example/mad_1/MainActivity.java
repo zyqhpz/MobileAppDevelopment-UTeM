@@ -45,6 +45,9 @@ public class MainActivity extends AppCompatActivity {
 
         Button btnLab6 = (Button) findViewById(R.id.btnLab6);
         btnLab6.setOnClickListener(this::changeActivitySix);
+
+        Button btnLab7 = (Button) findViewById(R.id.btnLab7);
+        btnLab7.setOnClickListener(this::changeActivitySeven);
     }
 
     public void fnChangeText(View view) {
@@ -69,6 +72,11 @@ public class MainActivity extends AppCompatActivity {
 
     public void changeActivitySix(View view) {
         Intent intent = new Intent(this, NavigationMainActivity.class);
+        startActivity(intent);
+    }
+
+    public void changeActivitySeven(View view) {
+        Intent intent = new Intent(this, SecondActivityCam.class);
         startActivity(intent);
     }
 }
