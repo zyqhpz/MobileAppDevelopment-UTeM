@@ -21,18 +21,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         super.onCreate(savedInstanceState);
-        //setContentView(R.layout.activity_main);
-        setContentView(binding.getRoot());
 
-//        Button btnHello = (Button) findViewById(R.id.btnHello);
-//        btnHello.setText(getString(R.string.btnHello));
-//
-//        txtHello = findViewById(R.id.txtHello);
-//        editText1 = findViewById(R.id.editText1);
-//
-//
-//
-//        binding.btnHello.setOnClickListener(this::fnChangeText);
+        setContentView(binding.getRoot());
 
         Button btnLab2 = (Button) findViewById(R.id.btnLab2);
         btnLab2.setOnClickListener(this::changeActivityTwo);
@@ -48,6 +38,9 @@ public class MainActivity extends AppCompatActivity {
 
         Button btnLab7 = (Button) findViewById(R.id.btnLab7);
         btnLab7.setOnClickListener(this::changeActivitySeven);
+
+        Button btnLab9 = (Button) findViewById(R.id.btnLab9);
+        btnLab9.setOnClickListener(this::changeActivityNine);
     }
 
     public void fnChangeText(View view) {
@@ -77,6 +70,10 @@ public class MainActivity extends AppCompatActivity {
 
     public void changeActivitySeven(View view) {
         Intent intent = new Intent(this, SecondActivityCam.class);
+        startActivity(intent);
+    }
+    public void changeActivityNine(View view) {
+        Intent intent = new Intent(this, AttendanceMainActivity.class);
         startActivity(intent);
     }
 }
