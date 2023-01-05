@@ -17,6 +17,10 @@ public class Student {
         this.state = state;
     }
 
+    public Student () {
+
+    }
+
     public String getFullname() {
         return fullname;
     }
