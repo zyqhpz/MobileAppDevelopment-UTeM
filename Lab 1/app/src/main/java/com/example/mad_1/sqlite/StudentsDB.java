@@ -17,12 +17,12 @@ public class StudentsDB extends SQLiteOpenHelper {
 
     public static final String dbName = "dbstudent";
     public static final String tblNameStudents = "students";
-    public static final String colStudName = "stud_name";
-    public static final String colStudGender = "stud_gender";
-    public static final String colStudDob = "stud_dob";
-    public static final String colStudNo = "stud_no";
-    public static final String colStudState = "stud_state";
-    public static final String colStudEmail = "stud_email";
+    public static final String colStudName = "studName";
+    public static final String colStudGender = "studGender";
+    public static final String colStudDob = "studDob";
+    public static final String colStudNo = "studNo";
+    public static final String colStudState = "studState";
+    public static final String colStudEmail = "studEmail";
 
     public static final String strCreateTableStudents = "CREATE TABLE "+ tblNameStudents + " ("+ colStudNo +
             " INTEGER PRIMARY KEY, " + colStudName +" TEXT, " + colStudGender +" TEXT,"+ colStudDob +" DATE,"+ colStudState +" TEXT,"+ colStudEmail +" TEXT)";
@@ -100,7 +100,7 @@ public class StudentsDB extends SQLiteOpenHelper {
     {
         List<Student> listStudents = new ArrayList<Student>();
 
-        String strSelAll = "Select * from " + tblNameStudents;
+        String strSelAll = "SELECT * FROM " + tblNameStudents;
 
         Cursor cursor = this.getReadableDatabase().rawQuery(strSelAll,null);
         if(cursor.moveToFirst())

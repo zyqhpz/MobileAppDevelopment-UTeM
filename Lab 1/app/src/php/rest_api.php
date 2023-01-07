@@ -27,4 +27,23 @@ if (isset($_REQUEST['selectFn']) && $_REQUEST['selectFn'] == "fnSaveData") {
         $response['respond'] = "Error: " . $e->getMessage();
         echo json_encode($response);
     }
+} else if (isset($_REQUEST['selectFn']) && $_REQUEST['selectFn'] == "fnSearchStud") {
+    try {
+
+        $studNo = $_REQUEST['studNo'];
+
+        $stmt = $db->prepare("SELECT * FROM students WHERE studNo LIKE :studNo");
+        $stmt->execute(array(':studNo' => $studNo));
+        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        
+        $response['respond'] = $result;
+        echo json_encode($response);
+    } catch (PDOException $e) {
+        $response['respond'] = "Error: " . $e->getMessage();
+        echo json_encode($response);
+    }
+}
+else {
+    $response['respond'] = "Error: No function selected";
+    echo json_encode($response);
 }

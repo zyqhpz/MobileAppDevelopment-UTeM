@@ -102,7 +102,7 @@ public class AttendanceMainActivity extends AppCompatActivity {
     }
 
     private void fnAddToRest(View view) {
-        String strURL = "http://192.168.0.115/RESTAPI/rest_api.php";
+        String strURL = "http://10.131.75.141/RESTAPI/rest_api.php";
         RequestQueue requestQueue = Volley.newRequestQueue(this);
         StringRequest stringRequest = new StringRequest(Request.Method.POST, strURL, new Response.Listener<String>() {
             @Override
@@ -112,6 +112,7 @@ public class AttendanceMainActivity extends AppCompatActivity {
                     jsonObject = new JSONObject(response);
                     Toast.makeText(getApplicationContext(), "Respond from server: " + jsonObject.getString("respond"), Toast.LENGTH_SHORT).show();
                 } catch (JSONException e) {
+                    Toast.makeText(getApplicationContext(), "Failed", Toast.LENGTH_SHORT).show();
                     e.printStackTrace();
                 }
             }
@@ -123,7 +124,6 @@ public class AttendanceMainActivity extends AppCompatActivity {
         {
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
-
 
                 SimpleDateFormat inputFormat = new SimpleDateFormat("dd/MM/yyyy");
                 SimpleDateFormat outputFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -149,6 +149,7 @@ public class AttendanceMainActivity extends AppCompatActivity {
                 params.put("studDob", convertedDate);
                 params.put("studGender", gender);
                 params.put("studState", binding.spnState.getSelectedItem().toString());
+                params.put("studEmail", binding.edtEmail.getText().toString());
                 return params;
             }
         };
