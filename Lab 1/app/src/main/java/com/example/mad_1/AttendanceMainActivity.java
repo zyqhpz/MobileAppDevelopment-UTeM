@@ -102,7 +102,8 @@ public class AttendanceMainActivity extends AppCompatActivity {
     }
 
     private void fnAddToRest(View view) {
-        String strURL = "http://10.131.75.141/RESTAPI/rest_api.php";
+//        String strURL = "http://10.131.75.141/RESTAPI/rest_api.php";
+        String strURL = "http://192.168.0.115/RESTAPI/rest_api.php";
         RequestQueue requestQueue = Volley.newRequestQueue(this);
         StringRequest stringRequest = new StringRequest(Request.Method.POST, strURL, new Response.Listener<String>() {
             @Override
@@ -119,6 +120,7 @@ public class AttendanceMainActivity extends AppCompatActivity {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
+                Toast.makeText(getApplicationContext(), error.toString(), Toast.LENGTH_SHORT).show();
             }
         })
         {

@@ -43,7 +43,8 @@ public class SearchStudentActivity extends AppCompatActivity {
     }
 
     private void fnSearch(View view) {
-        String strURL = "http://10.131.75.141/RESTAPI/rest_api.php";
+//        String strURL = "http://10.131.75.141/RESTAPI/rest_api.php";
+        String strURL = "http://192.168.0.115/RESTAPI/rest_api.php";
         RequestQueue requestQueue = Volley.newRequestQueue(this);
         StringRequest stringRequest = new StringRequest(Request.Method.POST, strURL, new Response.Listener<String>() {
             @Override
@@ -58,11 +59,11 @@ public class SearchStudentActivity extends AppCompatActivity {
 
                     for (int i = 0; i < jsonArray.length(); i++) {
                         JSONObject jsonObject = jsonArray.getJSONObject(i);
-                        Toast.makeText(getApplicationContext(), jsonObject.getString("studName"), Toast.LENGTH_SHORT).show();
-//                        binding.txtVwStudName2.setText(jsonObject.getString("studName"));
-//                        binding.txtVwStudGender.setText(jsonObject.getString("studGender"));
-//                        binding.txtVwStudNo.setText(jsonObject.getString("studNo"));
-//                        binding.txtVwStudState.setText(jsonObject.getString("studState"));
+//                        Toast.makeText(getApplicationContext(), jsonObject.getString("studName"), Toast.LENGTH_SHORT).show();
+                        binding.txtVwStudName2.setText(jsonObject.getString("studName"));
+                        binding.txtVwStudGender.setText(jsonObject.getString("studGender"));
+                        binding.txtVwStudNo.setText(jsonObject.getString("studNo"));
+                        binding.txtVwStudState.setText(jsonObject.getString("studState"));
                     }
 
                 } catch (JSONException e) {
