@@ -13,9 +13,7 @@ import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
-import com.android.volley.RetryPolicy;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.mad_1.databinding.ActivitySearchStudentBinding;
@@ -47,42 +45,46 @@ public class SearchStudentActivity extends AppCompatActivity {
     }
 
     private void fnSearch(View view) {
+//        String strURL = "http://10.131.75.141/RESTAPI/rest_api.php";
         String strURL = "http://192.168.0.115/RESTAPI/rest_api.php";
-
-        Map<String, String> params = new HashMap<>();
-        params.put("selectFn", "fnSearchStud");
-        params.put("studNo", binding.edtStudID.getText().toString());
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
 
         Toast.makeText(getApplicationContext(), binding.edtStudID.getText().toString(), Toast.LENGTH_SHORT).show();
 
-        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.GET, strURL, null, response -> {
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, strURL, response -> {
             try {
-                for (int i = 0; i < response.length(); i++) {
-                    JSONObject jsonObject = response.getJSONObject(i);
+                JSONObject jsonObj = new JSONObject(response);
+                JSONArray jsonArray = jsonObj.getJSONArray("respond");
+
+                Toast.makeText(getApplicationContext(), "get one", Toast.LENGTH_SHORT).show();
+
+                for (int i = 0; i < jsonArray.length(); i++) {
+                    JSONObject jsonObject = jsonArray.getJSONObject(i);
                     binding.txtVwStudName2.setText(jsonObject.getString("studName"));
                     binding.txtVwStudGender.setText(jsonObject.getString("studGender"));
                     binding.txtVwStudNo.setText(jsonObject.getString("studNo"));
                     binding.txtVwStudState.setText(jsonObject.getString("studState"));
                 }
             } catch (JSONException e) {
+                Toast.makeText(getApplicationContext(), "Failed", Toast.LENGTH_SHORT).show();
                 Log.e("Volley Error", "Failed to parse JSON response", e);
             }
         }, error -> {
+            Toast.makeText(getApplicationContext(), "Unable to fetch data", Toast.LENGTH_SHORT).show();
             Log.e("Volley Error", "Failed to retrieve data", error);
         })
         {
             @Override
             protected Map<String, String> getParams() {
+
+                String strSearchStudNo = binding.edtStudID.getText().toString();
+                Map<String, String> params = new HashMap<>();
+                params.put("selectFn", "fnSearchStud");
+                params.put("studNo", strSearchStudNo);
                 return params;
             }
         };
-        int timeout = 30; // in seconds
-        RetryPolicy policy = new DefaultRetryPolicy(timeout * 1000,
-                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
-                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
-        jsonArrayRequest.setRetryPolicy(policy);
-
-        RequestQueue requestQueue = Volley.newRequestQueue(this);
-        requestQueue.add(jsonArrayRequest);
+        stringRequest.setRetryPolicy(new DefaultRetryPolicy(5000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        requestQueue.add(stringRequest);
     }
 }
