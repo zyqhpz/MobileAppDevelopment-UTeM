@@ -4,14 +4,18 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
+import com.android.volley.RetryPolicy;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.mad_1.databinding.ActivitySearchStudentBinding;
@@ -43,55 +47,42 @@ public class SearchStudentActivity extends AppCompatActivity {
     }
 
     private void fnSearch(View view) {
-//        String strURL = "http://10.131.75.141/RESTAPI/rest_api.php";
         String strURL = "http://192.168.0.115/RESTAPI/rest_api.php";
-        RequestQueue requestQueue = Volley.newRequestQueue(this);
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, strURL, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-//                JSONObject jsonObject = null;
-                try {
-                    Toast.makeText(getApplicationContext(), "Getting some respond here", Toast.LENGTH_SHORT).show();
 
-                    JSONArray jsonArray = new JSONArray(response);
+        Map<String, String> params = new HashMap<>();
+        params.put("selectFn", "fnSearchStud");
+        params.put("studNo", binding.edtStudID.getText().toString());
 
-                    Toast.makeText(getApplicationContext(), "get one", Toast.LENGTH_SHORT).show();
+        Toast.makeText(getApplicationContext(), binding.edtStudID.getText().toString(), Toast.LENGTH_SHORT).show();
 
-                    for (int i = 0; i < jsonArray.length(); i++) {
-                        JSONObject jsonObject = jsonArray.getJSONObject(i);
-//                        Toast.makeText(getApplicationContext(), jsonObject.getString("studName"), Toast.LENGTH_SHORT).show();
-                        binding.txtVwStudName2.setText(jsonObject.getString("studName"));
-                        binding.txtVwStudGender.setText(jsonObject.getString("studGender"));
-                        binding.txtVwStudNo.setText(jsonObject.getString("studNo"));
-                        binding.txtVwStudState.setText(jsonObject.getString("studState"));
-                    }
-
-                } catch (JSONException e) {
-                    Toast.makeText(getApplicationContext(), "Failed", Toast.LENGTH_SHORT).show();
-                    e.printStackTrace();
+        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.GET, strURL, null, response -> {
+            try {
+                for (int i = 0; i < response.length(); i++) {
+                    JSONObject jsonObject = response.getJSONObject(i);
+                    binding.txtVwStudName2.setText(jsonObject.getString("studName"));
+                    binding.txtVwStudGender.setText(jsonObject.getString("studGender"));
+                    binding.txtVwStudNo.setText(jsonObject.getString("studNo"));
+                    binding.txtVwStudState.setText(jsonObject.getString("studState"));
                 }
+            } catch (JSONException e) {
+                Log.e("Volley Error", "Failed to parse JSON response", e);
             }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Toast.makeText(getApplicationContext(), "Unable to fetch data", Toast.LENGTH_SHORT).show();
-            }
+        }, error -> {
+            Log.e("Volley Error", "Failed to retrieve data", error);
         })
         {
-            @Nullable
             @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-
-                String strSearchStudNo = binding.edtStudID.getText().toString();
-
-                Map<String, String> params = new HashMap<>();
-                params.put("selectFn", "fnSearchStud");
-                params.put("studNo", strSearchStudNo);
-
-//                Toast.makeText(getApplicationContext(), strSearchStudNo, Toast.LENGTH_SHORT).show();
+            protected Map<String, String> getParams() {
                 return params;
             }
         };
-        requestQueue.add(stringRequest);
+        int timeout = 30; // in seconds
+        RetryPolicy policy = new DefaultRetryPolicy(timeout * 1000,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
+        jsonArrayRequest.setRetryPolicy(policy);
+
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        requestQueue.add(jsonArrayRequest);
     }
 }
