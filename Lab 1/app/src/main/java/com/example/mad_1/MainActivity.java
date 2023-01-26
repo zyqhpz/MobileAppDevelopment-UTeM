@@ -39,6 +39,9 @@ public class MainActivity extends AppCompatActivity {
         Button btnLab7 = (Button) findViewById(R.id.btnLab7);
         btnLab7.setOnClickListener(this::changeActivitySeven);
 
+        Button btnLab8 = (Button) findViewById(R.id.btnLab8);
+        btnLab8.setOnClickListener(this::changeActivityEight);
+
         Button btnLab9 = (Button) findViewById(R.id.btnLab9);
         btnLab9.setOnClickListener(this::changeActivityNine);
 
@@ -75,6 +78,12 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(this, SecondActivityCam.class);
         startActivity(intent);
     }
+
+    public void changeActivityEight(View view) {
+        Intent intent = new Intent(this, GetRestActivity.class);
+        startActivity(intent);
+    }
+
     public void changeActivityNine(View view) {
         Intent intent = new Intent(this, AttendanceMainActivity.class);
         startActivity(intent);
