@@ -79,20 +79,24 @@ public class AttendanceMainActivity extends AppCompatActivity {
         binding.rcvStud.setLayoutManager(new LinearLayoutManager(this));
 
         // retrieve students data
-        getData:
+        boolean success = false;
         try {
-            students.addAll(fnGetAllFromRest());
-            break getData;
+            fnGetAllFromRest();
+            adapter.notifyDataSetChanged();
+            Log.e("data from server", students.toString());
+            success = true;
         } catch (Exception e) {
             Toast.makeText(getApplicationContext(), "failed to retrieve from remote", Toast.LENGTH_SHORT).show();
         } finally {
-            try {
-                StudentsDB studentsDB = new StudentsDB(this);
-                students.addAll(studentsDB.fnGetAllStudents());
-            } catch (Exception e) {
-                Toast.makeText(getApplicationContext(), "failed to retrieve from local", Toast.LENGTH_SHORT).show();
-                e.printStackTrace();
-            }
+//            if (!success) {
+//                try {
+//                    StudentsDB studentsDB = new StudentsDB(this);
+//                    students.addAll(studentsDB.fnGetAllStudents());
+//                } catch (Exception e) {
+//                    Toast.makeText(getApplicationContext(), "failed to retrieve from local", Toast.LENGTH_SHORT).show();
+//                    e.printStackTrace();
+//                }
+//            }
         }
     }
 
@@ -191,9 +195,7 @@ public class AttendanceMainActivity extends AppCompatActivity {
         }).start();
     }
 
-    public List<Student> fnGetAllFromRest() {
-        List<Student> listStudents = new ArrayList<Student>();
-
+    public void fnGetAllFromRest() {
         String strURL = "http://192.168.0.115/RESTAPI/rest_api.php";
         RequestQueue requestQueue = Volley.newRequestQueue(this);
         StringRequest stringRequest = new StringRequest(Request.Method.POST, strURL, response -> {
@@ -201,23 +203,25 @@ public class AttendanceMainActivity extends AppCompatActivity {
             try {
                 jsonObject = new JSONObject(response);
 
-//                Toast.makeText(getApplicationContext(), "Respond from server: " + jsonObject.getString("respond"), Toast.LENGTH_SHORT).show();
+//                Toast.makeText(getApplicationContext(), "Respond from server: " + jsonObject.getJSONArray("respond").toString() , Toast.LENGTH_SHORT).show();
 
                 JSONArray jsonArray = jsonObject.getJSONArray("respond");
                 for (int i = 0; i < jsonArray.length(); i++) {
                     Student student = new Student();
                     JSONObject object = jsonArray.getJSONObject(i);
 
-                    student.setFullname(object.getString("studName"));
-                    student.setStudNo(object.getString("studNo"));
-                    student.setEmail(object.getString("studEmail"));
-                    student.setGender(object.getString("studGender"));
-                    student.setBirthdate(object.getString("studDob"));
-                    student.setState(object.getString("studState"));
+                    String fullname = object.getString("studName");
+                    String studNo = object.getString("studNo");
+                    String email = object.getString("studEmail");
+                    String gender = object.getString("studGender");
+                    String birth = object.getString("studDob");
+                    String state = object.getString("studState");
 
-                    listStudents.add(student);
+                    student = new Student(fullname,studNo,email,gender,birth,state);
+
+                    students.add(student);
+                    adapter.notifyDataSetChanged();
                 }
-
                 Toast.makeText(getApplicationContext(), "Respond from server: " + "get from remote server", Toast.LENGTH_SHORT).show();
             } catch (JSONException e) {
                 Toast.makeText(getApplicationContext(), "Failed to retrieve from server " + e.toString(), Toast.LENGTH_SHORT).show();
@@ -233,7 +237,5 @@ public class AttendanceMainActivity extends AppCompatActivity {
             }
         };
         requestQueue.add(stringRequest);
-
-        return listStudents;
     }
 }
