@@ -18,6 +18,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.mad_1.databinding.ActivityStudentMainBinding;
+import com.example.mad_1.sqlite.StudentsDB;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -82,32 +83,51 @@ public class AttendanceMainActivity extends AppCompatActivity {
         binding.rcvStud.setLayoutManager(new LinearLayoutManager(this));
     }
 
-    private void fnAdd(View view)  {
+    private void fnAdd()  {
         String fullname = binding.edtFullName.getText().toString();
         String studNo = binding.edtStudNum.getText().toString();
         String email = binding.edtEmail.getText().toString();
-        String birth = binding.edtBirthdate.getText().toString();
+//        String birth = binding.edtBirthdate.getText().toString();
         String gender = "";
         String state = binding.spnState.getSelectedItem().toString();
+
+        SimpleDateFormat inputFormat = new SimpleDateFormat("dd/MM/yyyy");
+        SimpleDateFormat outputFormat = new SimpleDateFormat("yyyy-MM-dd");
+        Date date = null;
+        try {
+            date = inputFormat.parse(binding.edtBirthdate.getText().toString());
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        String birth = outputFormat.format(date);
 
         if(binding.rbMale.isChecked())
             gender = binding.rbMale.getText().toString();
         else if(binding.rbFemale.isChecked())
             gender = binding.rbFemale.getText().toString();
 
-        student = new Student(fullname,studNo,email,gender,birth, state);
+        student = new Student(fullname,studNo,email,gender,birth,state);
+
+        fnAddToSqli();
 
         students.add(student);
         adapter.notifyItemInserted(students.size());
     }
 
+    private void fnAddToSqli() {
+        StudentsDB studentsDB = new StudentsDB(this);
+        studentsDB.fnInsertStudent(student);
+    }
+
     private void fnAddToRest(View view) {
 //        String strURL = "http://10.131.75.141/RESTAPI/rest_api.php";
-        String strURL = "http://192.168.0.115/RESTAPI/rest_api.php";
-        RequestQueue requestQueue = Volley.newRequestQueue(this);
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, strURL, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
+
+        fnAdd();
+
+        new Thread(() -> {
+            String strURL = "http://192.168.0.115/RESTAPI/rest_api.php";
+            RequestQueue requestQueue = Volley.newRequestQueue(this);
+            StringRequest stringRequest = new StringRequest(Request.Method.POST, strURL, response -> {
                 JSONObject jsonObject = null;
                 try {
                     jsonObject = new JSONObject(response);
@@ -116,45 +136,55 @@ public class AttendanceMainActivity extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(), "Failed", Toast.LENGTH_SHORT).show();
                     e.printStackTrace();
                 }
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Toast.makeText(getApplicationContext(), error.toString(), Toast.LENGTH_SHORT).show();
-            }
-        })
-        {
-            @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
+            }, error -> Toast.makeText(getApplicationContext(), error.toString(), Toast.LENGTH_SHORT).show())
+            {
+                @Override
+                protected Map<String, String> getParams() {
 
-                SimpleDateFormat inputFormat = new SimpleDateFormat("dd/MM/yyyy");
-                SimpleDateFormat outputFormat = new SimpleDateFormat("yyyy-MM-dd");
-                Date date = null;
-                try {
-                    date = inputFormat.parse(binding.edtBirthdate.getText().toString());
-                } catch (ParseException e) {
-                    e.printStackTrace();
+                    SimpleDateFormat inputFormat = new SimpleDateFormat("dd/MM/yyyy");
+                    SimpleDateFormat outputFormat = new SimpleDateFormat("yyyy-MM-dd");
+                    Date date = null;
+                    try {
+                        date = inputFormat.parse(binding.edtBirthdate.getText().toString());
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+                    String convertedBirthDate = outputFormat.format(date);
+
+                    String gender = "";
+
+                    String fullname = binding.edtFullName.getText().toString();
+                    String studNo = binding.edtStudNum.getText().toString();
+                    String email = binding.edtEmail.getText().toString();
+                    String state = binding.spnState.getSelectedItem().toString();
+
+                    if(binding.rbMale.isChecked())
+                        gender = binding.rbMale.getText().toString();
+                    else if(binding.rbFemale.isChecked())
+                        gender = binding.rbFemale.getText().toString();
+
+//                student = new Student(fullname,studNo,email,gender,convertedBirthDate,state);
+
+//                fnAddToSqli();
+//                students.add(student);
+//                    fnAdd();
+
+                    Map<String, String> params = new HashMap<>();
+                    params.put("selectFn", "fnSaveData");
+                    params.put("studName", fullname);
+                    params.put("studNo", studNo);
+                    params.put("studDob", convertedBirthDate);
+                    params.put("studGender", gender);
+                    params.put("studState", state);
+                    params.put("studEmail", email);
+                    return params;
                 }
-                String convertedDate = outputFormat.format(date);
+            };
+            requestQueue.add(stringRequest);
+        }).start();
 
-                String gender = "";
-
-                if(binding.rbMale.isChecked())
-                    gender = binding.rbMale.getText().toString();
-                else if(binding.rbFemale.isChecked())
-                    gender = binding.rbFemale.getText().toString();
-
-                Map<String, String> params = new HashMap<>();
-                params.put("selectFn", "fnSaveData");
-                params.put("studName", binding.edtFullName.getText().toString());
-                params.put("studNo", binding.edtStudNum.getText().toString());
-                params.put("studDob", convertedDate);
-                params.put("studGender", gender);
-                params.put("studState", binding.spnState.getSelectedItem().toString());
-                params.put("studEmail", binding.edtEmail.getText().toString());
-                return params;
-            }
-        };
-        requestQueue.add(stringRequest);
+//        new Thread(() -> {
+//            fnAdd();
+//        }).start();
     }
 }
