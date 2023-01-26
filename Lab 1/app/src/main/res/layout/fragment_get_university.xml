@@ -26,6 +26,15 @@
             android:inputType="textPersonName"
             android:minHeight="48dp" />
 
+        <EditText
+            android:id="@+id/edtFindUniversityName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="Find by University Name"
+            android:inputType="textPersonName"
+            android:minHeight="48dp" />
+
         <Button
             android:id="@+id/btnSearchU"
             android:layout_width="match_parent"

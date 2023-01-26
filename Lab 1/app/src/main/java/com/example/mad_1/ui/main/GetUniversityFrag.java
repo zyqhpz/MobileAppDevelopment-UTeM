@@ -54,25 +54,14 @@ public class GetUniversityFrag extends Fragment {
     }
 
     private void fnSearchUni(View view) {
-    String strURL = "http://universities.hipolabs.com/search?country=" + binding.edtFindUniversity.getText().toString();
+    String strURL = "http://universities.hipolabs.com/search?country=" + binding.edtFindUniversity.getText().toString() + "&name=" + binding.edtFindUniversityName.getText().toString();
     RequestQueue requestQueue = Volley.newRequestQueue(getContext());
-    StringRequest stringRequest = new StringRequest(Request.Method.GET, strURL, new Response. Listener<String>() {
-        @Override
-        public void onResponse (String response) {
-            binding.results.setText(response);
-            binding.results.setMovementMethod(new ScrollingMovementMethod());
-        }
-    }, new Response.ErrorListener() {
-        @Override
-        public void onErrorResponse (VolleyError error) {
-            Toast.makeText(getContext(), "Unable to connect to the university list!" + error.getMessage(), Toast.LENGTH_SHORT).show();
-        }
-    });
-    requestQueue.add (stringRequest);
-
+    StringRequest stringRequest = new StringRequest(Request.Method.GET, strURL, response -> {
+        binding.results.setText(response);
+        binding.results.setMovementMethod(new ScrollingMovementMethod());
+    }, error -> Toast.makeText(getContext(), "Unable to connect to the university list!" + error.getMessage(), Toast.LENGTH_SHORT).show());
+        requestQueue.add (stringRequest);
     }
-
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
