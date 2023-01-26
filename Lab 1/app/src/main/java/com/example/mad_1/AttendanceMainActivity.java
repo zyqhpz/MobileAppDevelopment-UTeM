@@ -5,6 +5,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.DatePickerDialog;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -21,14 +22,17 @@ import com.android.volley.toolbox.Volley;
 import com.example.mad_1.databinding.ActivityStudentMainBinding;
 import com.example.mad_1.sqlite.StudentsDB;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
@@ -74,15 +78,22 @@ public class AttendanceMainActivity extends AppCompatActivity {
         binding.rcvStud.setAdapter(adapter);
         binding.rcvStud.setLayoutManager(new LinearLayoutManager(this));
 
-        // retrieve students
+        // retrieve students data
+        getData:
         try {
-            StudentsDB studentsDB = new StudentsDB(this);
-            students.addAll(studentsDB.fnGetAllStudents());
+            students.addAll(fnGetAllFromRest());
+            break getData;
         } catch (Exception e) {
-            Toast.makeText(getApplicationContext(), "failed to retrieve", Toast.LENGTH_SHORT).show();
-            e.printStackTrace();
+            Toast.makeText(getApplicationContext(), "failed to retrieve from remote", Toast.LENGTH_SHORT).show();
+        } finally {
+            try {
+                StudentsDB studentsDB = new StudentsDB(this);
+                students.addAll(studentsDB.fnGetAllStudents());
+            } catch (Exception e) {
+                Toast.makeText(getApplicationContext(), "failed to retrieve from local", Toast.LENGTH_SHORT).show();
+                e.printStackTrace();
+            }
         }
-
     }
 
     private void fnAdd()  {
@@ -178,9 +189,51 @@ public class AttendanceMainActivity extends AppCompatActivity {
             };
             requestQueue.add(stringRequest);
         }).start();
+    }
 
-//        new Thread(() -> {
-//            fnAdd();
-//        }).start();
+    public List<Student> fnGetAllFromRest() {
+        List<Student> listStudents = new ArrayList<Student>();
+
+        String strURL = "http://192.168.0.115/RESTAPI/rest_api.php";
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, strURL, response -> {
+            JSONObject jsonObject = null;
+            try {
+                jsonObject = new JSONObject(response);
+
+//                Toast.makeText(getApplicationContext(), "Respond from server: " + jsonObject.getString("respond"), Toast.LENGTH_SHORT).show();
+
+                JSONArray jsonArray = jsonObject.getJSONArray("respond");
+                for (int i = 0; i < jsonArray.length(); i++) {
+                    Student student = new Student();
+                    JSONObject object = jsonArray.getJSONObject(i);
+
+                    student.setFullname(object.getString("studName"));
+                    student.setStudNo(object.getString("studNo"));
+                    student.setEmail(object.getString("studEmail"));
+                    student.setGender(object.getString("studGender"));
+                    student.setBirthdate(object.getString("studDob"));
+                    student.setState(object.getString("studState"));
+
+                    listStudents.add(student);
+                }
+
+                Toast.makeText(getApplicationContext(), "Respond from server: " + "get from remote server", Toast.LENGTH_SHORT).show();
+            } catch (JSONException e) {
+                Toast.makeText(getApplicationContext(), "Failed to retrieve from server " + e.toString(), Toast.LENGTH_SHORT).show();
+                e.printStackTrace();
+            }
+        }, error -> Toast.makeText(getApplicationContext(), error.toString(), Toast.LENGTH_SHORT).show())
+        {
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<>();
+                params.put("selectFn", "fnSelectAll");
+                return params;
+            }
+        };
+        requestQueue.add(stringRequest);
+
+        return listStudents;
     }
 }
