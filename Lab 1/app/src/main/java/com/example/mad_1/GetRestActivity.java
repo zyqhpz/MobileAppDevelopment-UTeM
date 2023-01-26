@@ -1,11 +1,16 @@
 package com.example.mad_1;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.tabs.TabLayout;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.viewpager.widget.ViewPager;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -23,12 +28,70 @@ public class GetRestActivity extends AppCompatActivity {
     TabLayout tabs;
     ViewPager viewPager;
 
+    private DrawerLayout drawerLayout;
+    private ActionBarDrawerToggle actionBarDrawerToggle;
+    private NavigationView navigationView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         binding = ActivityGetRestBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
+        drawerLayout = binding.myDrawerLayout;
+        actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.nav_open, R.string.nav_close);
+        actionBarDrawerToggle.syncState();
+        drawerLayout.addDrawerListener(actionBarDrawerToggle);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        navigationView = binding.navMenu;
+
+        navigationView.setNavigationItemSelectedListener(item -> {
+            Intent intent;
+
+            switch (item.getItemId()) {
+                case R.id.lab2:
+                    intent = new Intent(this, ThreadedActivityMain.class);
+                    startActivity(intent);
+                    break;
+
+                case R.id.lab4:
+                    intent = new Intent(this, RegistrationActivity.class);
+                    startActivity(intent);
+                    break;
+
+                case R.id.lab5:
+                    intent = new Intent(this, StudentMainActivity.class);
+                    startActivity(intent);
+                    break;
+
+                case R.id.lab6:
+                    intent = new Intent(this, NavigationMainActivity.class);
+                    startActivity(intent);
+                    break;
+
+                case R.id.lab7:
+                    intent = new Intent(this, SecondActivityCam.class);
+                    startActivity(intent);
+                    break;
+
+                case R.id.lab8:
+                    intent = new Intent(this, GetRestActivity.class);
+                    startActivity(intent);
+                    break;
+
+                case R.id.lab9:
+                    intent = new Intent(this, AttendanceMainActivity.class);
+                    startActivity(intent);
+                    break;
+
+                case R.id.lab91:
+                    intent = new Intent(this, SearchStudentActivity.class);
+                    startActivity(intent);
+                    break;
+            }
+            return false;
+        });
 
         // set and define tabs
         tabs = binding.tabs;
@@ -40,8 +103,6 @@ public class GetRestActivity extends AppCompatActivity {
         viewPager = binding.viewPager;
         viewPager.setAdapter(sectionsPagerAdapter);
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabs));
-//        tabs.setupWithViewPager(viewPager);
-//        FloatingActionButton fab = binding.fab;
 
         tabs.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
@@ -59,13 +120,13 @@ public class GetRestActivity extends AppCompatActivity {
 
             }
         });
+    }
 
-//        fab.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-//                        .setAction("Action", null).show();
-//            }
-//        });
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (actionBarDrawerToggle.onOptionsItemSelected(item)) {
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }
