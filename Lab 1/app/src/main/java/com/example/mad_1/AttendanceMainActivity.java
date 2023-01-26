@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.DatePickerDialog;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.Toast;
@@ -52,28 +53,19 @@ public class AttendanceMainActivity extends AppCompatActivity {
 
         binding.fabAdd.setOnClickListener(this::fnAddToRest);
 
-        binding.edtBirthdate.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                final Calendar cldr = Calendar.getInstance();
-                int day = cldr.get(Calendar.DAY_OF_MONTH);
-                int month = cldr.get(Calendar.MONTH);
-                int year = cldr.get(Calendar.YEAR);
+        binding.edtBirthdate.setOnClickListener(view -> {
+            final Calendar cldr = Calendar.getInstance();
+            int day = cldr.get(Calendar.DAY_OF_MONTH);
+            int month = cldr.get(Calendar.MONTH);
+            int year = cldr.get(Calendar.YEAR);
 
-                int mHour = cldr.get(Calendar.HOUR_OF_DAY);
-                int mMinute = cldr.get(Calendar.MINUTE);
-                String strDay ="";
-                // date picker dialog
-                datePicker = new DatePickerDialog(AttendanceMainActivity.this,
-                        new DatePickerDialog.OnDateSetListener() {
-                            @Override
-                            public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-
-                                binding.edtBirthdate.setText(dayOfMonth + "/" + (monthOfYear + 1) + "/" + year);
-                            }
-                        }, year, month, day);
-                datePicker.show();
-            }
+            int mHour = cldr.get(Calendar.HOUR_OF_DAY);
+            int mMinute = cldr.get(Calendar.MINUTE);
+            String strDay ="";
+            // date picker dialog
+            datePicker = new DatePickerDialog(AttendanceMainActivity.this,
+                    (view1, year1, monthOfYear, dayOfMonth) -> binding.edtBirthdate.setText(dayOfMonth + "/" + (monthOfYear + 1) + "/" + year1), year, month, day);
+            datePicker.show();
         });
 
         students = new Vector<>();
@@ -81,6 +73,16 @@ public class AttendanceMainActivity extends AppCompatActivity {
 
         binding.rcvStud.setAdapter(adapter);
         binding.rcvStud.setLayoutManager(new LinearLayoutManager(this));
+
+        // retrieve students
+        try {
+            StudentsDB studentsDB = new StudentsDB(this);
+            students.addAll(studentsDB.fnGetAllStudents());
+        } catch (Exception e) {
+            Toast.makeText(getApplicationContext(), "failed to retrieve", Toast.LENGTH_SHORT).show();
+            e.printStackTrace();
+        }
+
     }
 
     private void fnAdd()  {
@@ -162,12 +164,6 @@ public class AttendanceMainActivity extends AppCompatActivity {
                         gender = binding.rbMale.getText().toString();
                     else if(binding.rbFemale.isChecked())
                         gender = binding.rbFemale.getText().toString();
-
-//                student = new Student(fullname,studNo,email,gender,convertedBirthDate,state);
-
-//                fnAddToSqli();
-//                students.add(student);
-//                    fnAdd();
 
                     Map<String, String> params = new HashMap<>();
                     params.put("selectFn", "fnSaveData");
