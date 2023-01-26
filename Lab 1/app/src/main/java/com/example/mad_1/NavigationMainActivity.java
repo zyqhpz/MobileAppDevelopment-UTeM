@@ -37,23 +37,62 @@ public class NavigationMainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         binding = ActivityNavigationBinding.inflate(getLayoutInflater());
-
         setContentView(binding.getRoot());
 
-        // bind drawerLayout with my_drawer_layout using binding
-        drawerLayout = (DrawerLayout) binding.myDrawerLayout;
-//        drawerLayout = (DrawerLayout) findViewById(R.id.my_drawer_layout);
-
+        drawerLayout = binding.myDrawerLayout;
         actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.nav_open, R.string.nav_close);
         actionBarDrawerToggle.syncState();
-
         drawerLayout.addDrawerListener(actionBarDrawerToggle);
-
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-//        navigationView = (NavigationView) findViewById(R.id.nav_menu);
-        navigationView = (NavigationView) binding.navMenu;
+        navigationView = binding.navMenu;
+
+        navigationView.setNavigationItemSelectedListener(item -> {
+            Intent intent;
+
+            switch (item.getItemId()) {
+                case R.id.lab2:
+                    intent = new Intent(this, ThreadedActivityMain.class);
+                    startActivity(intent);
+                    break;
+
+                case R.id.lab4:
+                    intent = new Intent(this, RegistrationActivity.class);
+                    startActivity(intent);
+                    break;
+
+                case R.id.lab5:
+                    intent = new Intent(this, StudentMainActivity.class);
+                    startActivity(intent);
+                    break;
+
+                case R.id.lab6:
+                    intent = new Intent(this, NavigationMainActivity.class);
+                    startActivity(intent);
+                    break;
+
+                case R.id.lab7:
+                    intent = new Intent(this, SecondActivityCam.class);
+                    startActivity(intent);
+                    break;
+
+                case R.id.lab8:
+                    intent = new Intent(this, GetRestActivity.class);
+                    startActivity(intent);
+                    break;
+
+                case R.id.lab9:
+                    intent = new Intent(this, AttendanceMainActivity.class);
+                    startActivity(intent);
+                    break;
+
+                case R.id.lab91:
+                    intent = new Intent(this, SearchStudentActivity.class);
+                    startActivity(intent);
+                    break;
+            }
+            return false;
+        });
 
         binding.fabAdd.setOnClickListener(this::fnAdd);
 
@@ -82,27 +121,10 @@ public class NavigationMainActivity extends AppCompatActivity {
         });
 
         students = new Vector<>();
-//        adapter = new StudentAdapter(getLayoutInflater(),students);
         adapter = new StudentAdapter(getLayoutInflater(),students);
 
         binding.rcvStud.setAdapter(adapter);
         binding.rcvStud.setLayoutManager(new LinearLayoutManager(this));
-
-        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                Intent intent;
-
-                switch (item.getItemId()) {
-                    case R.id.nav_main_activity:
-                        return true;
-
-                    case R.id.nav_camera_activity:
-                        return false;
-                }
-                return false;
-            }
-        });
     }
 
     @Override

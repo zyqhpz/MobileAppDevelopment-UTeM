@@ -1,13 +1,19 @@
 package com.example.mad_1;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.DatePickerDialog;
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.Toast;
@@ -19,8 +25,10 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.mad_1.databinding.ActivityAttendanceMainBinding;
 import com.example.mad_1.databinding.ActivityStudentMainBinding;
 import com.example.mad_1.sqlite.StudentsDB;
+import com.google.android.material.navigation.NavigationView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -38,7 +46,7 @@ import java.util.Vector;
 
 public class AttendanceMainActivity extends AppCompatActivity {
 
-    private ActivityStudentMainBinding binding;
+    private ActivityAttendanceMainBinding binding;
     private Student student;
 
     private Vector<Student> students;
@@ -46,14 +54,72 @@ public class AttendanceMainActivity extends AppCompatActivity {
 
     private DatePickerDialog datePicker;
 
+    private DrawerLayout drawerLayout;
+    private ActionBarDrawerToggle actionBarDrawerToggle;
+    private NavigationView navigationView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_student_main);
 
-        binding = ActivityStudentMainBinding.inflate(getLayoutInflater());
+        binding = ActivityAttendanceMainBinding.inflate(getLayoutInflater());
 
         setContentView(binding.getRoot());
+
+        drawerLayout = binding.myDrawerLayout;
+        actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.nav_open, R.string.nav_close);
+        actionBarDrawerToggle.syncState();
+        drawerLayout.addDrawerListener(actionBarDrawerToggle);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        navigationView = binding.navMenu;
+
+        navigationView.setNavigationItemSelectedListener(item -> {
+            Intent intent;
+
+            switch (item.getItemId()) {
+                case R.id.lab2:
+                    intent = new Intent(this, ThreadedActivityMain.class);
+                    startActivity(intent);
+                    break;
+
+                case R.id.lab4:
+                    intent = new Intent(this, RegistrationActivity.class);
+                    startActivity(intent);
+                    break;
+
+                case R.id.lab5:
+                    intent = new Intent(this, StudentMainActivity.class);
+                    startActivity(intent);
+                    break;
+
+                case R.id.lab6:
+                    intent = new Intent(this, NavigationMainActivity.class);
+                    startActivity(intent);
+                    break;
+
+                case R.id.lab7:
+                    intent = new Intent(this, SecondActivityCam.class);
+                    startActivity(intent);
+                    break;
+
+                case R.id.lab8:
+                    intent = new Intent(this, GetRestActivity.class);
+                    startActivity(intent);
+                    break;
+
+                case R.id.lab9:
+                    intent = new Intent(this, AttendanceMainActivity.class);
+                    startActivity(intent);
+                    break;
+
+                case R.id.lab91:
+                    intent = new Intent(this, SearchStudentActivity.class);
+                    startActivity(intent);
+                    break;
+            }
+            return false;
+        });
 
         binding.fabAdd.setOnClickListener(this::fnAddToRest);
 
@@ -88,16 +154,24 @@ public class AttendanceMainActivity extends AppCompatActivity {
         } catch (Exception e) {
             Toast.makeText(getApplicationContext(), "failed to retrieve from remote", Toast.LENGTH_SHORT).show();
         } finally {
-//            if (!success) {
-//                try {
-//                    StudentsDB studentsDB = new StudentsDB(this);
-//                    students.addAll(studentsDB.fnGetAllStudents());
-//                } catch (Exception e) {
-//                    Toast.makeText(getApplicationContext(), "failed to retrieve from local", Toast.LENGTH_SHORT).show();
-//                    e.printStackTrace();
-//                }
-//            }
+            if (!success) {
+                try {
+                    StudentsDB studentsDB = new StudentsDB(this);
+                    students.addAll(studentsDB.fnGetAllStudents());
+                } catch (Exception e) {
+                    Toast.makeText(getApplicationContext(), "failed to retrieve from local", Toast.LENGTH_SHORT).show();
+                    e.printStackTrace();
+                }
+            }
         }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (actionBarDrawerToggle.onOptionsItemSelected(item)) {
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     private void fnAdd()  {
